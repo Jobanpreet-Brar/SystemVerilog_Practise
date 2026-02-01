@@ -32,6 +32,17 @@ A memory-mapped slave module compliant with the AMBA AXI4-Lite protocol.
   * Built a **Bus Functional Model (BFM)** testbench.
   * Replaced manual wire-toggling with reusable SystemVerilog `tasks` (`axi_write`, `axi_read`) to simulate a Master CPU.
   * **Key Lesson:** Learned to use Blocking Assignments (`=`) inside tasks to prevent race conditions when capturing read data from the DUT.
+
+### 5. SPI Master (Mode 0)
+A synthesizable Serial Peripheral Interface (SPI) Master core designed for Mode 0 operation (CPOL=0, CPHA=0).
+* **Functionality:**
+  * Serializes 8-bit parallel data from the host into standard SPI signals (`MOSI`, `SCLK`, `CS_n`).
+  * Generates an `SCLK` frequency at 1/10th of the system clock (10 MHz SPI from 100 MHz System).
+* **Architecture:**
+  * **2-State FSM:** Used a clean `IDLE` -> `TRANSFER` state machine to manage the transaction lifecycle.
+  * **Integrated Clock Generation:** Derived `SCLK` logic directly from internal counters to ensure zero skew between data (`MOSI`) transitions and clock edges.
+  * **Handshake Interface:** Implements a `valid`/`ready` protocol to synchronize with the host system.
+* **Note:** This is currently a **Transmit-Only** implementation. The `MISO` (Master In Slave Out) port is reserved for future receive-path logic.
 ---
 **Tools Used:** Vivado 2016.2  
 **Language:** SystemVerilog
