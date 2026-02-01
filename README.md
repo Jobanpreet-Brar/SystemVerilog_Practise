@@ -21,6 +21,17 @@ A standard 8N1 serial transmitter (1 Start, 8 Data, 1 Stop).
 * **Why:** I found this easier to synchronize than separating the Next State logic, and it avoids accidental latches.
 * **Status:** Verified with `0xA5` pattern in simulation.
 
+  
+### 4. AXI4-Lite Slave Register File
+A memory-mapped slave module compliant with the AMBA AXI4-Lite protocol.
+* **Features:**
+  * Independent Read and Write channels using standard `VALID`/`READY` handshakes.
+  * **Register Map:** Includes Read/Write registers, a Read-Only Status register, and a specialized **Traffic Counter**.
+  * **Traffic Statistics:** A hardware counter at address `0x10` that automatically increments on every valid write transaction to the block.
+* **Verification:**
+  * Built a **Bus Functional Model (BFM)** testbench.
+  * Replaced manual wire-toggling with reusable SystemVerilog `tasks` (`axi_write`, `axi_read`) to simulate a Master CPU.
+  * **Key Lesson:** Learned to use Blocking Assignments (`=`) inside tasks to prevent race conditions when capturing read data from the DUT.
 ---
 **Tools Used:** Vivado 2016.2  
 **Language:** SystemVerilog
